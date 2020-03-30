@@ -1,0 +1,59 @@
+﻿@model string
+
+
+<div class="row">
+    <div class="col-md-12">
+        <h1>Database Update Progress</h1>
+    </div>
+    <div class="col-md-10">
+        <hr />
+    </div>
+    <div class="col-md-10">
+        &nbsp;
+    </div>
+
+    @if (Model == "Complete")
+    {
+        <div class="col-md-12">
+            <div class="alert-success">
+                <h3><img src="~/images/TaskCompleted.png" /> Database updated successfully</h3>
+            </div>
+            <div>
+                <h3>@Html.Raw(Model)</h3>
+            </div>
+        </div>
+    }
+    else if (Model.StartsWith("Error"))
+    {
+        <div class="col-md-12">
+            <div class="alert-danger">
+                <h3><img src="~/images/TaskError.png" /> Error updating database</h3>
+            </div>
+            <div>
+                <h3>@Html.Raw(Model)</h3>
+            </div>
+        </div>
+    }
+    else if (Model.StartsWith("NotRequired"))
+    {
+        <div class="col-md-12">
+            <div class="alert-warning">
+                <h3><img src="~/images/TaskInfo.png" /> Database updated is not required</h3>
+            </div>
+            <div>
+                <h3>@Html.Raw(Model)</h3>
+            </div>
+        </div>
+    }
+    else
+    {
+        <div class="col-md-12">
+            <div class="alert-info">
+                <h3><img src="~/images/PleaseWait.gif" /> Please wait...</h3>
+            </div>
+            <div>
+                <h3>@Html.Raw(Model)</h3>
+            </div>
+        </div>
+    }
+</div>
