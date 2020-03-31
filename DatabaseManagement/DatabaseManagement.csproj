@@ -5,7 +5,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Remove="Tasks\DeployDbChanges.cs~RF3e0ef46c.TMP" />
+    <None Remove="Jobs\DeployDbChanges.cs~RF3e0ef46c.TMP" />
   </ItemGroup>
 
   <ItemGroup>

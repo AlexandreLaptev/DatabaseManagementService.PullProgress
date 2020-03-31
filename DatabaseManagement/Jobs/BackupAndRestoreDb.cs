@@ -9,7 +9,7 @@ namespace DatabaseManagement
 {
     internal class BackupAndRestoreDb
     {
-        public static void BackupDB(string backupFilePath, IConfiguration configuration, Guid requestId, ILogger<Controllers.HomeController> logger)
+        public static void BackupDB(string backupFilePath, IConfiguration configuration, Guid requestId, ILogger<DatabaseUpgrater> logger)
         {
             logger.LogInformation("Backup database operation started...");
             ProgressTracker.add(requestId, "Backup database operation started...");
@@ -75,7 +75,7 @@ namespace DatabaseManagement
             }
         }
 
-        public static void RestoreDB(string backupFilePath, IConfiguration configuration, Guid requestId, ILogger<Controllers.HomeController> logger)
+        public static void RestoreDB(string backupFilePath, IConfiguration configuration, Guid requestId, ILogger<DatabaseUpgrater> logger)
         {
             logger.LogInformation("Restore database operation started...");
             ProgressTracker.add(requestId, "Restore database operation started...");

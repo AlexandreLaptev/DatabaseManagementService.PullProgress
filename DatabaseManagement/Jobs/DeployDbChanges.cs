@@ -10,13 +10,13 @@ namespace DatabaseManagement
 {
     internal class DeployDbChanges
     {
-        public static void PerformUpgrade(IConfiguration configuration, Guid requestId, ILogger<Controllers.HomeController> logger)
+        public static void PerformUpgrade(IConfiguration configuration, Guid requestId, ILogger<DatabaseUpgrater> logger)
         {
             PerformSchemaUpgrade(configuration, requestId, logger);
             PerformDataUpgrade(configuration, requestId, logger);
         }
 
-        public static void PerformSchemaUpgrade(IConfiguration configuration, Guid requestId, ILogger<Controllers.HomeController> logger)
+        public static void PerformSchemaUpgrade(IConfiguration configuration, Guid requestId, ILogger<DatabaseUpgrater> logger)
         {
             string scriptsPath = GetScriptsDirectory("Schema", configuration);
 
@@ -68,7 +68,7 @@ namespace DatabaseManagement
             }
         }
 
-        public static void PerformDataUpgrade(IConfiguration configuration, Guid requestId, ILogger<Controllers.HomeController> logger)
+        public static void PerformDataUpgrade(IConfiguration configuration, Guid requestId, ILogger<DatabaseUpgrater> logger)
         {
             string scriptsPath = GetScriptsDirectory("Data", configuration);
 
