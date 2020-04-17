@@ -34,26 +34,31 @@ namespace DatabaseManagement
             services.AddRazorPages();
 
             // Add Hangfire services
-            services.AddHangfire(configuration => configuration
-                    .SetDataCompatibilityLevel(CompatibilityLevel.Version_170)
-                    .UseSimpleAssemblyNameTypeSerializer()
-                    .UseRecommendedSerializerSettings()
-                    .UseSqlServerStorage(Configuration["HangfireConnection"],
-                     new SqlServerStorageOptions
-                     {
-                         CommandBatchMaxTimeout = TimeSpan.FromMinutes(5),
-                         SlidingInvisibilityTimeout = TimeSpan.FromMinutes(5),
-                         QueuePollInterval = TimeSpan.Zero,
-                         UseRecommendedIsolationLevel = true,
-                         UsePageLocksOnDequeue = true,
-                         DisableGlobalLocks = true
-                     }));
-
-            // Add the processing server as IHostedService
-            services.AddHangfireServer(options =>
+            services.AddHangfire(config =>
             {
-                options.WorkerCount = 1;
+                var connectionString = Configuration["HangfireConnection"];
+
+                var storageOptions = new SqlServerStorageOptions
+                {
+                    CommandBatchMaxTimeout = TimeSpan.FromMinutes(5),
+                    SlidingInvisibilityTimeout = TimeSpan.FromMinutes(5),
+                    QueuePollInterval = TimeSpan.Zero,
+                    UseRecommendedIsolationLevel = true,
+                    UsePageLocksOnDequeue = true,
+                    DisableGlobalLocks = true
+                };
+
+                config.SetDataCompatibilityLevel(CompatibilityLevel.Version_170);
+                config.UseSimpleAssemblyNameTypeSerializer();
+                config.UseRecommendedSerializerSettings();
+                config.UseSqlServerStorage(connectionString, storageOptions);
             });
+
+            //// Add the processing server as IHostedService
+            //services.AddHangfireServer(options =>
+            //{
+            //    options.WorkerCount = 1;
+            //});
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
