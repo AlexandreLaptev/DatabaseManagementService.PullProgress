@@ -3,7 +3,7 @@ using System.IO;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
+using Serilog;
 
 namespace DatabaseManagement
 {
@@ -28,24 +28,19 @@ namespace DatabaseManagement
 
             var config = builder.Build();
 
+            Log.Logger = new LoggerConfiguration()
+                .ReadFrom.Configuration(config)
+                .CreateLogger();
+
             var webHostBuilder = new WebHostBuilder()
+                .UseSerilog()
                 .UseKestrel()
                 .UseContentRoot(Directory.GetCurrentDirectory())
                 .UseConfiguration(config)
                 .UseStartup<Startup>()
                 .ConfigureLogging((context, logging) =>
                 {
-                    // Clear all previously registered providers
-                    logging.ClearProviders();
-
-                    // Now register everything you want
-                    logging.AddConfiguration(context.Configuration.GetSection("Logging"));
-
-                    if (context.HostingEnvironment.IsDevelopment())
-                    {
-                        logging.AddConsole();
-                        logging.AddDebug();
-                    }
+                        logging.AddSerilog();
                 });
 
             var host = webHostBuilder.Build();

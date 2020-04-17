@@ -7,6 +7,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Hangfire;
 using Hangfire.SqlServer;
+using Serilog;
 
 namespace DatabaseManagement
 {
@@ -68,9 +69,9 @@ namespace DatabaseManagement
                 app.UseExceptionHandler("/Home/Error");
             }
 
-            app.UseStaticFiles();
+            app.UseSerilogRequestLogging();
 
-            app.UseHangfireDashboard();
+            app.UseStaticFiles();
 
             app.UseRouting();
 
