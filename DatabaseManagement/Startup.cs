@@ -53,12 +53,6 @@ namespace DatabaseManagement
                 config.UseRecommendedSerializerSettings();
                 config.UseSqlServerStorage(connectionString, storageOptions);
             });
-
-            //// Add the processing server as IHostedService
-            //services.AddHangfireServer(options =>
-            //{
-            //    options.WorkerCount = 1;
-            //});
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -79,6 +73,13 @@ namespace DatabaseManagement
             app.UseStaticFiles();
 
             app.UseRouting();
+
+            app.UseHangfireServer(new BackgroundJobServerOptions
+            {
+                WorkerCount = 1,
+                ServerCheckInterval = TimeSpan.FromMinutes(5),
+                CancellationCheckInterval = TimeSpan.FromMinutes(5)
+            }); ;
 
             app.UseEndpoints(endpoints =>
             {

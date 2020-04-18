@@ -40,7 +40,7 @@ namespace DatabaseManagement
                 .UseStartup<Startup>()
                 .ConfigureLogging((context, logging) =>
                 {
-                        logging.AddSerilog();
+                    logging.AddSerilog();
                 });
 
             var host = webHostBuilder.Build();

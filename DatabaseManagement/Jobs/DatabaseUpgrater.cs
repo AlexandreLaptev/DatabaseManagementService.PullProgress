@@ -26,6 +26,7 @@ namespace DatabaseManagement
         [AutomaticRetry(Attempts = 0)] // If you don’t want a job to be retried, place an explicit attribute with 0 maximum retry attempts value
         public async Task PerformAsync(Guid requestId)
         {
+            _logger.LogInformation("Process to upload database for {@requestId} is starting...", requestId);
             var backupDirectory = _configuration["BackupDirectory"];
             string backupFilePath = string.Empty;
 
@@ -60,7 +61,7 @@ namespace DatabaseManagement
                     _cancellationToken.ThrowIfCancellationRequested();
 
                     // Check if backup file created
-                    if (!System.IO.File.Exists(backupFilePath))
+                    if (!File.Exists(backupFilePath))
                         throw new Exception($"Backup file '{backupFilePath}' has not been created.");
 
                     // Perform database upgrade
@@ -85,7 +86,7 @@ namespace DatabaseManagement
                 {
                     try
                     {
-                        if (!string.IsNullOrEmpty(backupFilePath) && System.IO.File.Exists(backupFilePath))
+                        if (!string.IsNullOrEmpty(backupFilePath) && File.Exists(backupFilePath))
                         {
                             // Restore databse
                             BackupAndRestoreDb.RestoreDB(backupFilePath, _configuration, requestId, _logger);
@@ -100,8 +101,8 @@ namespace DatabaseManagement
             }
 
             // Remove the backup files from the hard disk
-            if (!string.IsNullOrEmpty(backupFilePath) && System.IO.File.Exists(backupFilePath))
-                System.IO.File.Delete(backupFilePath);
+            if (!string.IsNullOrEmpty(backupFilePath) && File.Exists(backupFilePath))
+                File.Delete(backupFilePath);
 
             await Task.CompletedTask;
         }
