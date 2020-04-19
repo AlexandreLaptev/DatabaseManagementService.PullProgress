@@ -32,19 +32,30 @@ namespace DatabaseManagement
                 .ReadFrom.Configuration(config)
                 .CreateLogger();
 
-            var webHostBuilder = new WebHostBuilder()
-                .UseSerilog()
-                .UseKestrel()
-                .UseContentRoot(Directory.GetCurrentDirectory())
-                .UseConfiguration(config)
-                .UseStartup<Startup>()
-                .ConfigureLogging((context, logging) =>
-                {
-                    logging.AddSerilog();
-                });
+            try
+            {
+                var webHostBuilder = new WebHostBuilder()
+               .UseSerilog()
+               .UseKestrel()
+               .UseContentRoot(Directory.GetCurrentDirectory())
+               .UseConfiguration(config)
+               .UseStartup<Startup>()
+               .ConfigureLogging((context, logging) =>
+               {
+                   logging.AddSerilog();
+               });
 
-            var host = webHostBuilder.Build();
-            host.Run();
+                var host = webHostBuilder.Build();
+                host.Run();
+            }
+            catch (Exception ex)
+            {
+                Log.Fatal(ex, "Application start-up failed");
+            }
+            finally
+            {
+                Log.CloseAndFlush();
+            }
         }
     }
 }

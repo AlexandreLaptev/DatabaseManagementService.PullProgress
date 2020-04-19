@@ -2,3 +2,4 @@
 /DatabaseManagement/bin
 /DatabaseManagement/obj
 DatabaseManagement/Logs/
+Hangfire.sqlite

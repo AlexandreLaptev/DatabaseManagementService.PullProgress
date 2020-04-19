@@ -6,7 +6,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Hangfire;
-using Hangfire.SqlServer;
+using Hangfire.SQLite;
 using Serilog;
 
 namespace DatabaseManagement
@@ -25,7 +25,8 @@ namespace DatabaseManagement
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.InitializeHangfireDatabase(Configuration, Logger);
+            var connectionString = Configuration["HangfireConnection"];
+            services.InitializeHangfireDatabase(connectionString, Logger);
 
             // The following line enables Application Insights telemetry collection
             services.AddApplicationInsightsTelemetry();
@@ -36,22 +37,10 @@ namespace DatabaseManagement
             // Add Hangfire services
             services.AddHangfire(config =>
             {
-                var connectionString = Configuration["HangfireConnection"];
-
-                var storageOptions = new SqlServerStorageOptions
-                {
-                    CommandBatchMaxTimeout = TimeSpan.FromMinutes(5),
-                    SlidingInvisibilityTimeout = TimeSpan.FromMinutes(5),
-                    QueuePollInterval = TimeSpan.Zero,
-                    UseRecommendedIsolationLevel = true,
-                    UsePageLocksOnDequeue = true,
-                    DisableGlobalLocks = true
-                };
-
                 config.SetDataCompatibilityLevel(CompatibilityLevel.Version_170);
                 config.UseSimpleAssemblyNameTypeSerializer();
                 config.UseRecommendedSerializerSettings();
-                config.UseSqlServerStorage(connectionString, storageOptions);
+                config.UseSQLiteStorage(connectionString, new SQLiteStorageOptions());
             });
         }
 
@@ -74,6 +63,7 @@ namespace DatabaseManagement
 
             app.UseRouting();
 
+            app.UseHangfireDashboard();
             app.UseHangfireServer(new BackgroundJobServerOptions
             {
                 WorkerCount = 1,

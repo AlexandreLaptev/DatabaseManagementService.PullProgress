@@ -1,17 +1,20 @@
 ﻿using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using JetBrains.Annotations;
 
 namespace DatabaseManagement
 {
     public static class HangfireDbContextServiceCollectionExtensions
     {
-        public static IServiceCollection InitializeHangfireDatabase(this IServiceCollection services, IConfiguration configuration, ILogger<Startup> logger)
+        public static IServiceCollection InitializeHangfireDatabase(this IServiceCollection services, [NotNull] string connectionString, ILogger<Startup> logger)
         {
             logger.LogInformation("Creating Hangfire database...");
 
-            var initializer = new HangfireDbContextInitializer<HangfireDbContext>();
-            initializer.InitializeDatabase(new HangfireDbContext());
+            using (var dbContext = new HangfireDbContext(connectionString))
+            {
+                dbContext.Database.EnsureDeleted();
+                dbContext.Database.EnsureCreated();
+            }
 
             logger.LogInformation("Hangfire database created.");
             return services;
