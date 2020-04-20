@@ -26,7 +26,7 @@ namespace DatabaseManagement
         public void ConfigureServices(IServiceCollection services)
         {
             var connectionString = Configuration["HangfireConnection"];
-            services.InitializeHangfireDatabase(connectionString, Logger);
+            services.CreateHangfireContext(connectionString, Logger);
 
             // The following line enables Application Insights telemetry collection
             services.AddApplicationInsightsTelemetry();

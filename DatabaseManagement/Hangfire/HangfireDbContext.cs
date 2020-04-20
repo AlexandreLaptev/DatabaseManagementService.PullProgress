@@ -1,18 +1,11 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using JetBrains.Annotations;
 
 namespace DatabaseManagement
 {
     public class HangfireDbContext : DbContext
     {
-        private readonly string _connectionString;
-
-        public HangfireDbContext([NotNull] string connectionString)
+        public HangfireDbContext(DbContextOptions<HangfireDbContext> options) : base(options)
         {
-            _connectionString = connectionString;
         }
-
-        protected override void OnConfiguring(DbContextOptionsBuilder options)
-            => options.UseSqlite(_connectionString);
     }
 }
